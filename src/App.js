@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class InputForms extends React.Component {
   constructor(props)
@@ -18,11 +19,13 @@ class InputForms extends React.Component {
   handleSubmit(event)
   { 
     event.preventDefault();
-    this.state.dataList.push({
-      name: this.state.inputName.slice(),
-      address: this.state.inputAddress.slice(),
-    });
-    this.setState({dataList: this.state.dataList});
+    // this.state.dataList.push({
+    //   name: this.state.inputName.slice(),
+    //   address: this.state.inputAddress.slice(),
+    // });
+    // this.setState({dataList: this.state.dataList});
+
+    this.props.addAddress(this.state.inputName, this.state.inputAddress);
   }
     
   handleChange(event)
@@ -52,6 +55,11 @@ class InputForms extends React.Component {
     );
   }
 }
+
+InputForms.propTypes = {
+  value: PropTypes.array,
+  addAddress: PropTypes.func
+};
 
 class AddressTable extends React.Component {
   constructor(props) {
@@ -85,6 +93,10 @@ class AddressTable extends React.Component {
   }  
 }
 
+AddressTable.propTypes = {
+  value: PropTypes.array,
+};
+
 class AddressBook extends React.Component {
   constructor(props)
   {
@@ -95,8 +107,20 @@ class AddressBook extends React.Component {
           {address: 'Osaka', name: 'Hanako'},
       ],
     };
+
+    this.handleAddAddress = this.handleAddAddress.bind(this);
   }  
-  
+
+  handleAddAddress(name, address)
+  {
+    var data = this.state.addressList;
+    data.push({
+      name: name,
+      address: address,
+    });
+    this.setState({addressList: data});
+  }
+
   render() {
     const inputName = 'アドレス帳';
     
@@ -104,7 +128,7 @@ class AddressBook extends React.Component {
       <div className="addressbook">
           <div>{inputName} </div>
           <div className='inputForms'>
-            <InputForms value={this.state.addressList} />
+            <InputForms value={this.state.addressList} addAddress={this.handleAddAddress}/>
           </div>
           <div className='addressList'>
             <AddressTable value={this.state.addressList}/>
