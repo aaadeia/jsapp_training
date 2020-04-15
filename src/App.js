@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Container, Divider, Header, Segment, Table} from 'semantic-ui-react'
 
 class InputForms extends React.Component {
   constructor(props)
@@ -19,38 +20,32 @@ class InputForms extends React.Component {
   handleSubmit(event)
   { 
     event.preventDefault();
-    // this.state.dataList.push({
-    //   name: this.state.inputName.slice(),
-    //   address: this.state.inputAddress.slice(),
-    // });
-    // this.setState({dataList: this.state.dataList});
-
     this.props.addAddress(this.state.inputName, this.state.inputAddress);
   }
     
   handleChange(event)
   {
-     this.setState({inputName: event.target.value});
+    this.setState({inputName: event.target.value});
   }
   
-   handleAddressChange(event)
+    handleAddressChange(event)
   {
-     this.setState({inputAddress: event.target.value});
+    this.setState({inputAddress: event.target.value});
   }
   
   render()
   {    
     return(
       <form onSubmit={this.handleSubmit}>
-       <label>
-         Name:
+        <label>
+          Name:
 <input type="text" value={this.state.inputName} onChange={this.handleChange}/>
-       </label>
-       <label>
-         Address:
+        </label>
+        <label>
+          Address:
 <input type="text" value={this.state.inputAddress} onChange={this.handleAddressChange}/>
-       </label>
-       <input type="submit" value="追加"/>
+        </label>
+        <input type="submit" value="追加"/>
       </form>
     );
   }
@@ -81,14 +76,31 @@ class AddressTable extends React.Component {
   render()
   {
     return(    
-       <div>
-       <h3>アドレス一覧</h3>
-       <ol>
-          {this.state.dataList.map( (dataList, i) => {
-            return <li key={i}> <input type="button" value="☓" onClick={() => this.deleteButton(i)}/>{dataList.name} : {dataList.address}</li>
-          })}
-       </ol>
-      </div>
+      <Container>
+        <Header as="h3">アドレス一覧</Header>
+        <Table>
+          <Table.Header>
+            <Table.HeaderCell>削除</Table.HeaderCell>
+            <Table.HeaderCell>名前</Table.HeaderCell>
+            <Table.HeaderCell>住所</Table.HeaderCell>
+          </Table.Header>
+          <Table.Body>
+            {this.state.dataList.map( (dataList, i) => {
+              return <Table.Row key={i}>
+                <Table.Cell>
+                <input type="button" value="☓" onClick={() => this.deleteButton(i)}/>
+                </Table.Cell>
+                <Table.Cell>
+                {dataList.name}
+                </Table.Cell>
+                <Table.Cell>
+                {dataList.address}
+                </Table.Cell>
+              </Table.Row>
+            })}
+          </Table.Body>
+        </Table>
+      </Container>
     );
   }  
 }
@@ -125,15 +137,13 @@ class AddressBook extends React.Component {
     const inputName = 'アドレス帳';
     
     return (
-      <div className="addressbook">
-          <div>{inputName} </div>
-          <div className='inputForms'>
+      <Container text style={{ marginTop: '7rem' }} >
+          <Header as="h2">{inputName} </Header>
+          <Divider />
             <InputForms value={this.state.addressList} addAddress={this.handleAddAddress}/>
-          </div>
-          <div className='addressList'>
+          <Divider />
             <AddressTable value={this.state.addressList}/>
-          </div>  
-      </div>
+      </Container>
     );
   }
 }
