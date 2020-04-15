@@ -1,7 +1,7 @@
 Reactでアドレス帳を作る個人的なトレーニングです。
 
 ## Demo
-![result](https://github.com/aaadeia/jsapp_training/blob/master/public/address_gif.gif)
+![result](https://github.com/aaadeia/jsapp_training/blob/master/public/address_fixui.gif)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
