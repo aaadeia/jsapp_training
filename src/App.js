@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Container, Divider, Header, Segment, Table} from 'semantic-ui-react'
+import {Container, Divider, Header, Table} from 'semantic-ui-react'
 
 class InputForms extends React.Component {
   constructor(props)
@@ -9,7 +9,6 @@ class InputForms extends React.Component {
     this.state = 
       { inputName: '',
         inputAddress: '',
-        dataList: this.props.value,
       };
     
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,13 +21,13 @@ class InputForms extends React.Component {
     event.preventDefault();
     this.props.addAddress(this.state.inputName, this.state.inputAddress);
   }
-    
+  
   handleChange(event)
   {
     this.setState({inputName: event.target.value});
   }
   
-    handleAddressChange(event)
+  handleAddressChange(event)
   {
     this.setState({inputAddress: event.target.value});
   }
@@ -59,18 +58,11 @@ InputForms.propTypes = {
 class AddressTable extends React.Component {
   constructor(props) {
     super(props);
-        this.state = 
-      { 
-        dataList: this.props.value,
-      };
   }
   
   deleteButton(i)
   {
-    this.state.dataList.splice(i, 1);
-    this.setState({
-      dataList: this.state.dataList 
-    });
+    this.props.delAddress(i);
   }
   
   render()
@@ -85,16 +77,16 @@ class AddressTable extends React.Component {
             <Table.HeaderCell>住所</Table.HeaderCell>
           </Table.Header>
           <Table.Body>
-            {this.state.dataList.map( (dataList, i) => {
+            {this.props.value.map( (addresData, i) => {
               return <Table.Row key={i}>
                 <Table.Cell>
                 <input type="button" value="☓" onClick={() => this.deleteButton(i)}/>
                 </Table.Cell>
                 <Table.Cell>
-                {dataList.name}
+                {addresData.name}
                 </Table.Cell>
                 <Table.Cell>
-                {dataList.address}
+                {addresData.address}
                 </Table.Cell>
               </Table.Row>
             })}
@@ -107,30 +99,25 @@ class AddressTable extends React.Component {
 
 AddressTable.propTypes = {
   value: PropTypes.array,
+  delAddress: PropTypes.func,
 };
 
 class AddressBook extends React.Component {
   constructor(props)
   {
     super(props);
-    this.state = {
-      addressList: [
-          {address: 'Tokyo', name: 'Taro'},
-          {address: 'Osaka', name: 'Hanako'},
-      ],
-    };
-
-    this.handleAddAddress = this.handleAddAddress.bind(this);
+    this.AddAddress = this.AddAddress.bind(this);
+    this.DelAddress = this.DelAddress.bind(this);
   }  
 
-  handleAddAddress(name, address)
+  AddAddress(name, address)
   {
-    var data = this.state.addressList;
-    data.push({
-      name: name,
-      address: address,
-    });
-    this.setState({addressList: data});
+    this.props.handleAddressAdd(name, address);
+  }
+
+  DelAddress(i)
+  {
+    this.props.handleAddressDelete(i);
   }
 
   render() {
@@ -140,12 +127,18 @@ class AddressBook extends React.Component {
       <Container text style={{ marginTop: '7rem' }} >
           <Header as="h2">{inputName} </Header>
           <Divider />
-            <InputForms value={this.state.addressList} addAddress={this.handleAddAddress}/>
+            <InputForms value={this.props.addressList} addAddress={this.AddAddress}/>
           <Divider />
-            <AddressTable value={this.state.addressList}/>
+            <AddressTable value={this.props.addressList} delAddress={this.DelAddress}/>
       </Container>
     );
   }
+}
+
+AddressBook.propTypes = {
+  addressList: PropTypes.array,
+  handleAddressAdd: PropTypes.func,
+  handleAddressDelete: PropTypes.func,
 }
 
 export default AddressBook;
